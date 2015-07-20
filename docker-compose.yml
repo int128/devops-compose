@@ -1,0 +1,103 @@
+version: "2"
+
+services:
+  reverse-proxy:
+    build: reverse-proxy
+    ports:
+      - "80:80"
+    links:
+      - jenkins
+      - gitbucket
+      - jira
+      - mattermost-app
+
+  mattermost-app:
+    image: mattermost/mattermost-prod-app
+    environment:
+      MATTERMOST_ENABLE_SSL: "false"
+    links:
+      - mattermost-db:db
+    volumes:
+      - mattermost-app-data:/mattermost/data
+
+  mattermost-db:
+    image: mattermost/mattermost-prod-db
+    volumes:
+      - mattermost-db-data:/var/lib/postgresql/data
+
+  jenkins:
+    image: jenkins
+    environment:
+      JENKINS_OPTS: --prefix=/jenkins
+    links:
+      - ldap
+      - jenkins-slave
+    volumes:
+      - jenkins-data:/var/jenkins_home
+
+  gitbucket:
+    image: f99aq8ove/gitbucket
+    command: java -jar /opt/gitbucket.war --prefix=/gitbucket
+    links:
+      - db
+      - ldap
+    volumes:
+      - gitbucket-data:/gitbucket
+
+  jenkins-slave:
+    build: jenkins-slave
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+  jira:
+    image: cptactionhank/atlassian-jira-software
+    environment:
+      X_PATH: /jira
+      X_PROXY_NAME: localhost
+      X_PROXY_PORT: 80
+      X_PROXY_SCHEME: http
+    links:
+      - db
+      - ldap
+      - jira-matter-bridge
+    volumes:
+      - jira-data:/var/atlassian/jira
+
+  jira-matter-bridge:
+    build: jira-matter-bridge
+    links:
+      - mattermost-app
+    environment:
+      MATTERMOST_SERVER: mattermost-app
+
+  db:
+    image: mysql:5.6
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+    volumes:
+      - db-data:/var/lib/mysql
+
+  ldap:
+    image: nickstenning/slapd
+    environment:
+      LDAP_DOMAIN: example.com
+      LDAP_ORGANISATION: example.com
+      LDAP_ROOTPASS: admin
+    volumes:
+      - ldap-data:/var/lib/ldap
+
+volumes:
+  jenkins-data:
+    driver: local
+  gitbucket-data:
+    driver: local
+  jira-data:
+    driver: local
+  db-data:
+    driver: local
+  ldap-data:
+    driver: local
+  mattermost-app-data:
+    driver: local
+  mattermost-db-data:
+    driver: local
