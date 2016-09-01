@@ -15,15 +15,14 @@ services:
     image: mattermost/mattermost-prod-app
     environment:
       MATTERMOST_ENABLE_SSL: "false"
+      DB_HOST: db
+      MM_DBNAME: mattermost
+      MM_USERNAME: mattermost
+      MM_PASSWORD: mattermost
     links:
-      - mattermost-db:db
+      - db
     volumes:
       - mattermost-app-data:/mattermost/data
-
-  mattermost-db:
-    image: mattermost/mattermost-prod-db
-    volumes:
-      - mattermost-db-data:/var/lib/postgresql/data
 
   jenkins:
     image: jenkins
@@ -36,8 +35,12 @@ services:
       - jenkins-data:/var/jenkins_home
 
   gitbucket:
-    image: f99aq8ove/gitbucket
-    command: java -jar /opt/gitbucket.war --prefix=/gitbucket
+    build: gitbucket
+    environment:
+      GITBUCKET_OPTS: --prefix=/gitbucket
+      GITBUCKET_DB_URL: jdbc:postgresql://db/gitbucket
+      GITBUCKET_DB_USER: gitbucket
+      GITBUCKET_DB_PASSWORD: gitbucket
     links:
       - db
       - ldap
@@ -71,11 +74,21 @@ services:
       MATTERMOST_SERVER: mattermost-app
 
   db:
-    image: mysql:5.6
+    build: postgres
     environment:
-      MYSQL_ROOT_PASSWORD: admin
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      JIRA_DB_NAME: jira
+      JIRA_DB_USER: jira
+      JIRA_DB_PASSWORD: jira
+      GITBUCKET_DB_NAME: gitbucket
+      GITBUCKET_DB_USER: gitbucket
+      GITBUCKET_DB_PASSWORD: gitbucket
+      MATTERMOST_DB_NAME: mattermost
+      MATTERMOST_DB_USER: mattermost
+      MATTERMOST_DB_PASSWORD: mattermost
     volumes:
-      - db-data:/var/lib/mysql
+      - db-data:/var/lib/postgresql/data
 
   ldap:
     image: nickstenning/slapd
@@ -98,6 +111,4 @@ volumes:
   ldap-data:
     driver: local
   mattermost-app-data:
-    driver: local
-  mattermost-db-data:
     driver: local

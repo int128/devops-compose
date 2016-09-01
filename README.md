@@ -8,6 +8,7 @@ A docker-compose to setup following containers quickly.
 * Jenkins slave for Docker operation
 * Mattermost
 * Reverse Proxy
+* PostgreSQL
 * LDAP
 
 
@@ -70,7 +71,6 @@ Configure a mail service such as AWS SES and use the email sign up.
 
 ## TODO
 
-* MySQL for JIRA and GitBucket
 * Init script
 * Backup script
 
