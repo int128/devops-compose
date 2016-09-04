@@ -1,6 +1,6 @@
 # devops-compose
 
-A docker-compose to setup following containers quickly.
+A docker-compose to setup following tools in a few minutes.
 
 * JIRA software
 * GitBucket
@@ -40,9 +40,17 @@ docker-compose up -d
 Open port 80 of the instance on the browser.
 The index page should show up.
 
-Open JIRA, configure LDAP authentication and create a user.
+Open JIRA and configure the database connection.
 
-- LDAP Server: `ldap`
+- Database server: `db`
+- Type: PostgreSQL
+- Database name: `jira`
+- User: `jira`
+- Password: `jira`
+
+Configure LDAP authentication and create a user.
+
+- LDAP server: `ldap`
 - Admin DN: `cn=admin,dc=example,dc=org` with `admin`
 - Base DN: `dc=example,dc=org`
 - User attribute: `cn`
@@ -62,6 +70,7 @@ Open Jenkins and configure LDAP authentication.
 ### Setup GitBucket
 
 Open GitBucket and configure LDAP authentication.
+Database connection is automatically configured.
 
 ### Setup Mattermost
 
