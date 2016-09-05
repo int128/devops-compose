@@ -77,10 +77,18 @@ Database connection is automatically configured.
 Mattermost (Community Edition) does not support LDAP authentication.
 Configure a mail service such as AWS SES and use the email sign up.
 
+### Register init script
+
+We provide the init script for LSB.
+Register as follows:
+
+```sh
+sudo ln -s /opt/devops-compose/init.sh /etc/init.d/devops-compose
+sudo chkconfig --add devops-compose
+```
 
 ## TODO
 
-* Init script
 * Backup script
 
 
