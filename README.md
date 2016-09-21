@@ -28,6 +28,9 @@ services:
   jira:
     environment:
       X_PROXY_NAME: ec2-x-x-x-x.x.compute.amazonaws.com
+  confluence:
+    environment:
+      X_PROXY_NAME: ec2-x-x-x-x.x.compute.amazonaws.com
 ```
 
 Run containers:
