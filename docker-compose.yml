@@ -9,6 +9,7 @@ services:
       - jenkins
       - gitbucket
       - jira
+      - confluence
       - mattermost-app
 
   mattermost-app:
@@ -66,6 +67,19 @@ services:
     volumes:
       - jira-data:/var/atlassian/jira
 
+  confluence:
+    image: cptactionhank/atlassian-confluence
+    environment:
+      X_PATH: /wiki
+      X_PROXY_NAME: localhost
+      X_PROXY_PORT: 80
+      X_PROXY_SCHEME: http
+    links:
+      - db
+      - ldap
+    volumes:
+      - confluence-data:/var/atlassian/confluence
+
   jira-matter-bridge:
     build: jira-matter-bridge
     links:
@@ -81,6 +95,9 @@ services:
       JIRA_DB_NAME: jira
       JIRA_DB_USER: jira
       JIRA_DB_PASSWORD: jira
+      CONFLUENCE_DB_NAME: confluence
+      CONFLUENCE_DB_USER: confluence
+      CONFLUENCE_DB_PASSWORD: confluence
       GITBUCKET_DB_NAME: gitbucket
       GITBUCKET_DB_USER: gitbucket
       GITBUCKET_DB_PASSWORD: gitbucket
@@ -105,6 +122,8 @@ volumes:
   gitbucket-data:
     driver: local
   jira-data:
+    driver: local
+  confluence-data:
     driver: local
   db-data:
     driver: local

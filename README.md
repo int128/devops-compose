@@ -3,6 +3,7 @@
 A docker-compose to setup following tools in a few minutes.
 
 * JIRA software
+* Confluence
 * GitBucket
 * Jenkins
 * Jenkins slave for Docker operation
@@ -25,6 +26,9 @@ Put environment specific settings into `docker-compose.override.yml`:
 ```yaml
 services:
   jira:
+    environment:
+      X_PROXY_NAME: ec2-x-x-x-x.x.compute.amazonaws.com
+  confluence:
     environment:
       X_PROXY_NAME: ec2-x-x-x-x.x.compute.amazonaws.com
 ```
@@ -56,6 +60,16 @@ Configure LDAP authentication and create a user.
 - User attribute: `cn`
 - Name attribute: `displayName`
 - Mail attribute: `mail`
+
+### Setup Confluence
+
+Open Confluence and configure the database connection.
+
+- Database server: `db`
+- Type: PostgreSQL
+- Database name: `confluence`
+- User: `confluence`
+- Password: `confluence`
 
 ### Setup Jenkins
 
