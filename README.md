@@ -3,6 +3,7 @@
 A docker-compose to setup following tools in a few minutes.
 
 * JIRA software
+* Confluence
 * GitBucket
 * Jenkins
 * Jenkins slave for Docker operation
@@ -56,6 +57,16 @@ Configure LDAP authentication and create a user.
 - User attribute: `cn`
 - Name attribute: `displayName`
 - Mail attribute: `mail`
+
+### Setup Confluence
+
+Open Confluence and configure the database connection.
+
+- Database server: `db`
+- Type: PostgreSQL
+- Database name: `confluence`
+- User: `confluence`
+- Password: `confluence`
 
 ### Setup Jenkins
 
