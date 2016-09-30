@@ -1,0 +1,12 @@
+machine:
+  services:
+    - docker
+
+dependencies:
+  override:
+    - curl -L -o docker-compose https://github.com/docker/compose/releases/download/1.8.0/docker-compose-`uname -s`-`uname -m`
+    - chmod +x docker-compose
+
+test:
+  override:
+    - ./docker-compose config
