@@ -36,7 +36,7 @@ services:
       - jenkins-data:/var/jenkins_home
 
   gitbucket:
-    build: gitbucket
+    image: f99aq8ove/gitbucket
     environment:
       GITBUCKET_OPTS: --prefix=/gitbucket
       GITBUCKET_DB_URL: jdbc:postgresql://db/gitbucket
