@@ -14,12 +14,18 @@ A docker-compose to setup following tools in a few minutes.
 
 ## How to Use
 
-Install Docker Compose and run containers:
+Run containers on Docker Compose.
 
 ```sh
-./install-docker-compose.sh
 docker-compose build
 docker-compose up -d
+```
+
+We can provision an EC2 instance with [the Ansible playbook](playbook-docker-compose.yml).
+
+```sh
+ssh-add ~/.ssh/aws.pem
+ansible-playbook -i hosts playbook-docker-compose.yml
 ```
 
 ### Setup JIRA

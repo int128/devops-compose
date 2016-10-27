@@ -1,0 +1,39 @@
+- hosts: all
+  vars:
+    swapfile_prefix: /media/ephemeral0
+  remote_user: ec2-user
+  become: true
+  tasks:
+  - name: Update everything
+    yum: name=* state=latest
+
+  - name: Install Docker
+    yum: name=docker state=latest
+  - name: Enable Docker service
+    service: name=docker state=running
+  - name: Install Docker Compose
+    get_url:
+      url: https://github.com/docker/compose/releases/download/1.8.1/docker-compose-{{ansible_system}}-{{ansible_machine}}
+      dest: /usr/local/bin/docker-compose
+      mode: 0755
+  - name: Add user to docker group
+    user: name=ec2-user append=true groups=docker
+
+  - name: Create swap file
+    command: fallocate -l {{ansible_memtotal_mb}}M {{swapfile_prefix}}/swap
+  - name: Fix mode of swap file
+    file: path={{swapfile_prefix}}/swap mode=600
+  - name: Make swap
+    command: mkswap {{swapfile_prefix}}/swap
+  - name: Enable swap
+    command: swapon {{swapfile_prefix}}/swap
+  - name: Enable swap on boot
+    mount:
+      name: swap
+      src: "{{swapfile_prefix}}/swap"
+      fstype: swap
+      opts: defaults
+      passno: 0
+      dump: 0
+      state: present
+
