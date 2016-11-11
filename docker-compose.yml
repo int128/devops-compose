@@ -69,6 +69,18 @@ services:
     volumes:
       - jenkins-data:/var/jenkins_home
 
+  artifactory:
+    image: docker.bintray.io/jfrog/artifactory-oss
+    environment:
+      VIRTUAL_HOST: artifactory.${REVERSE_PROXY_DOMAIN}
+      VIRTUAL_PORT: 8081
+    links:
+      - ldap
+      - db
+    volumes:
+      - artifactory-data:/var/opt/jfrog/artifactory/data
+      - artifactory-conf:/var/opt/jfrog/artifactory/etc
+
   mattermost:
     image: mattermost/mattermost-prod-app
     environment:
@@ -121,6 +133,10 @@ volumes:
   gitbucket-data:
     driver: local
   jenkins-data:
+    driver: local
+  artifactory-data:
+    driver: local
+  artifactory-conf:
     driver: local
   mattermost-data:
     driver: local

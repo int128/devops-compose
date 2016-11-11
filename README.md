@@ -6,6 +6,7 @@ A docker-compose to setup following tools in a few minutes.
 * Confluence
 * GitBucket
 * Jenkins
+* Artifactory
 * Mattermost
 * Reverse Proxy
 * PostgreSQL
@@ -90,6 +91,17 @@ Open GitBucket and configure LDAP authentication.
 - User attribute: `cn`
 - Name attribute: `displayname`
 - Mail attribute: `mail`
+
+### Setup Artifactory
+
+Open Artifactory and configure LDAP authentication.
+
+- LDAP server: `ldap://ldap/dc=example,dc=com`
+- User DN: `cn={0}`
+- Mail attribute: `mail`
+- Search filter: `(*)`
+- Search base: `dc=example,dc=com`
+- Manage DN: `cn=admin,dc=example,dc=com` with `admin`
 
 ### Setup Mattermost
 
