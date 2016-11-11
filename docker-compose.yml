@@ -1,13 +1,30 @@
 version: "2"
 
 services:
+  reverse-proxy:
+    build: reverse-proxy
+    container_name: reverse-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - /etc/nginx/conf.d/map
+
+  reverse-proxy-generator:
+    build: reverse-proxy-generator
+    command: -notify-sighup reverse-proxy -watch /nginx.tmpl /etc/nginx/conf.d/map/generated
+    volumes_from:
+      - reverse-proxy
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+
   jira:
     image: cptactionhank/atlassian-jira-software
     environment:
-      X_PATH: /jira
-      X_PROXY_NAME: localhost
-      X_PROXY_PORT: 80
-      X_PROXY_SCHEME: http
+      VIRTUAL_HOST: jira.${REVERSE_PROXY_DOMAIN}
+      VIRTUAL_PORT: 8080
+      X_PROXY_NAME: jira.${REVERSE_PROXY_DOMAIN}
+      X_PROXY_PORT: ${REVERSE_PROXY_PORT}
+      X_PROXY_SCHEME: ${REVERSE_PROXY_PROTO}
     links:
       - db
       - ldap
@@ -17,10 +34,11 @@ services:
   confluence:
     image: cptactionhank/atlassian-confluence
     environment:
-      X_PATH: /confluence
-      X_PROXY_NAME: localhost
-      X_PROXY_PORT: 80
-      X_PROXY_SCHEME: http
+      VIRTUAL_HOST: confluence.${REVERSE_PROXY_DOMAIN}
+      VIRTUAL_PORT: 8090
+      X_PROXY_NAME: confluence.${REVERSE_PROXY_DOMAIN}
+      X_PROXY_PORT: ${REVERSE_PROXY_PORT}
+      X_PROXY_SCHEME: ${REVERSE_PROXY_PROTO}
     links:
       - db
       - ldap
@@ -30,7 +48,8 @@ services:
   gitbucket:
     image: f99aq8ove/gitbucket
     environment:
-      GITBUCKET_OPTS: --prefix=/gitbucket
+      VIRTUAL_HOST: git.${REVERSE_PROXY_DOMAIN}
+      VIRTUAL_PORT: 8080
       GITBUCKET_DB_URL: jdbc:postgresql://db/gitbucket
       GITBUCKET_DB_USER: gitbucket
       GITBUCKET_DB_PASSWORD: gitbucket
@@ -43,7 +62,8 @@ services:
   jenkins:
     image: jenkins
     environment:
-      JENKINS_OPTS: --prefix=/jenkins
+      VIRTUAL_HOST: jenkins.${REVERSE_PROXY_DOMAIN}
+      VIRTUAL_PORT: 8080
     links:
       - ldap
     volumes:
@@ -52,7 +72,9 @@ services:
   mattermost:
     image: mattermost/mattermost-prod-app
     environment:
-      MATTERMOST_ENABLE_SSL: "false"
+      VIRTUAL_HOST: mattermost.${REVERSE_PROXY_DOMAIN}
+      VIRTUAL_PORT: 8080
+      MATTERMOST_ENABLE_SSL: ${REVERSE_PROXY_HTTPS}
       DB_HOST: db
       MM_DBNAME: mattermost
       MM_USERNAME: mattermost
@@ -62,17 +84,6 @@ services:
     volumes:
       - mattermost-data:/mattermost/data
       - mattermost-config:/mattermost/config
-
-  reverse-proxy:
-    build: reverse-proxy
-    ports:
-      - "80:80"
-    links:
-      - jenkins
-      - gitbucket
-      - jira
-      - confluence
-      - mattermost
 
   db:
     build: postgres

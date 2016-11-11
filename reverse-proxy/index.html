@@ -3,16 +3,26 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.0/cosmo/bootstrap.min.css"/>
+<script src="//code.jquery.com/jquery-3.1.1.min.js"></script>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.0/united/bootstrap.min.css"/>
 </head>
 <body>
 
-  <div class="text-center">
-    <a href="/jira/" class="btn btn-default">JIRA</a>
-    <a href="/confluence/" class="btn btn-default">Confluence</a>
-    <a href="/jenkins/" class="btn btn-default">Jenkins</a>
-    <a href="/gitbucket/" class="btn btn-default">GitBucket</a>
+  <div class="container text-center">
+    <p><a id="jira" class="btn btn-default">JIRA</a></p>
+    <p><a id="confluence" class="btn btn-default">Confluence</a></p>
+    <p><a id="jenkins" class="btn btn-default">Jenkins</a></p>
+    <p><a id="git" class="btn btn-default">GitBucket</a></p>
+    <p><a id="mattermost" class="btn btn-default">Mattermost</a></p>
   </div>
+
+  <script>
+    $(function () {
+      $('a[id]').each(function () {
+        $(this).attr('href', '//' + location.hostname.replace(/^\w+/, $(this).attr('id')));
+      });
+    });
+  </script>
 
 </body>
 </html>
