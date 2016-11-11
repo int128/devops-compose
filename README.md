@@ -8,6 +8,7 @@ A docker-compose to setup following tools in a few minutes.
 * Jenkins
 * Artifactory
 * Mattermost
+* ownCloud
 * Reverse Proxy
 * PostgreSQL
 * LDAP
@@ -107,6 +108,14 @@ Open Artifactory and configure LDAP authentication.
 
 Mattermost (Community Edition) does not support LDAP authentication.
 Configure a mail service such as AWS SES and use the email sign up.
+
+### ownCloud
+
+Open ownCloud and configure LDAP authentication.
+
+- LDAP server: `ldap:389`
+- Admin DN: `cn=admin,dc=example,dc=com` with `admin`
+- Base DN: `dc=example,dc=com`
 
 ### Register init script
 
