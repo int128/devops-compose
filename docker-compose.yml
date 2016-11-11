@@ -106,13 +106,12 @@ services:
       - db-data:/var/lib/postgresql/data
 
   ldap:
-    image: nickstenning/slapd
+    image: osixia/openldap
     environment:
       LDAP_DOMAIN: example.com
-      LDAP_ORGANISATION: example.com
-      LDAP_ROOTPASS: admin
     volumes:
       - ldap-data:/var/lib/ldap
+      - ldap-config:/etc/ldap/slapd.d
 
 volumes:
   jira-data:
@@ -130,4 +129,6 @@ volumes:
   db-data:
     driver: local
   ldap-data:
+    driver: local
+  ldap-config:
     driver: local
