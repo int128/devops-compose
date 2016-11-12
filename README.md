@@ -1,6 +1,6 @@
-# devops-compose [![CircleCI](https://circleci.com/gh/int128/devops-compose.svg?style=shield)](https://circleci.com/gh/int128/devops-compose)
+# DevOps Compose [![CircleCI](https://circleci.com/gh/int128/devops-compose.svg?style=shield)](https://circleci.com/gh/int128/devops-compose)
 
-A docker-compose to setup following tools in a few minutes.
+A compose of Docker containers:
 
 * JIRA software
 * Confluence
@@ -9,12 +9,12 @@ A docker-compose to setup following tools in a few minutes.
 * Artifactory
 * Mattermost
 * ownCloud
-* Reverse Proxy
 * PostgreSQL
 * LDAP
 
-
 ## How to Use
+
+This is designed to work with [int128/containers-reverse-proxy](https://github.com/int128/containers-reverse-proxy).
 
 Run containers on Docker Compose.
 

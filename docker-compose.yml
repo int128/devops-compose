@@ -1,22 +1,6 @@
 version: "2"
 
 services:
-  reverse-proxy:
-    build: reverse-proxy
-    container_name: reverse-proxy
-    ports:
-      - "80:80"
-    volumes:
-      - /etc/nginx/conf.d/map
-
-  reverse-proxy-generator:
-    build: reverse-proxy-generator
-    command: -notify-sighup reverse-proxy -watch /nginx.tmpl /etc/nginx/conf.d/map/generated
-    volumes_from:
-      - reverse-proxy
-    volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-
   jira:
     image: cptactionhank/atlassian-jira-software
     environment:
@@ -30,6 +14,9 @@ services:
       - ldap
     volumes:
       - jira-data:/var/atlassian/jira
+    networks:
+      - default
+      - reverse-proxy-network
 
   confluence:
     image: cptactionhank/atlassian-confluence
@@ -44,6 +31,9 @@ services:
       - ldap
     volumes:
       - confluence-data:/var/atlassian/confluence
+    networks:
+      - default
+      - reverse-proxy-network
 
   gitbucket:
     image: f99aq8ove/gitbucket
@@ -58,6 +48,9 @@ services:
       - ldap
     volumes:
       - gitbucket-data:/gitbucket
+    networks:
+      - default
+      - reverse-proxy-network
 
   jenkins:
     image: jenkins
@@ -68,6 +61,9 @@ services:
       - ldap
     volumes:
       - jenkins-data:/var/jenkins_home
+    networks:
+      - default
+      - reverse-proxy-network
 
   artifactory:
     image: docker.bintray.io/jfrog/artifactory-oss
@@ -80,6 +76,9 @@ services:
     volumes:
       - artifactory-data:/var/opt/jfrog/artifactory/data
       - artifactory-conf:/var/opt/jfrog/artifactory/etc
+    networks:
+      - default
+      - reverse-proxy-network
 
   mattermost:
     image: mattermost/mattermost-prod-app
@@ -96,6 +95,9 @@ services:
     volumes:
       - mattermost-data:/mattermost/data
       - mattermost-config:/mattermost/config
+    networks:
+      - default
+      - reverse-proxy-network
 
   owncloud:
     image: owncloud
@@ -109,6 +111,9 @@ services:
       - owncloud-data:/var/www/html/data
       - owncloud-config:/var/www/html/config
       - owncloud-apps:/var/www/html/apps
+    networks:
+      - default
+      - reverse-proxy-network
 
   db:
     build: postgres
@@ -170,3 +175,9 @@ volumes:
     driver: local
   ldap-config:
     driver: local
+
+networks:
+  reverse-proxy-network:
+    external:
+      name: ${REVERSE_PROXY_NETWORK}
+
