@@ -15,9 +15,10 @@ A compose of Docker containers:
 
 ## How to Use
 
-This is designed to work with [int128/containers-reverse-proxy](https://github.com/int128/containers-reverse-proxy).
+This is designed to work behind SSL termination such as AWS ELB.
 
 Run containers on Docker Compose.
+This may take a few minutes.
 
 ```sh
 docker-compose build
@@ -32,9 +33,6 @@ ansible-playbook -i hosts playbook-docker-compose.yml
 ```
 
 ### Setup JIRA
-
-Open port 80 of the instance on the browser.
-The index page should show up.
 
 Open JIRA and configure the database connection.
 
