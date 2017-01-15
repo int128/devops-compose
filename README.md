@@ -7,6 +7,7 @@ A compose of Docker containers:
 * GitBucket
 * Jenkins
 * Artifactory
+* SonarQube
 * Mattermost
 * ownCloud
 * PostgreSQL
@@ -103,6 +104,10 @@ Open Artifactory and configure LDAP authentication.
 - Search filter: `(*)`
 - Search base: `dc=example,dc=com`
 - Manage DN: `cn=admin,dc=example,dc=com` with `admin`
+
+### Setup SonarQube
+
+SonarQube does not support LDAP authentication.
 
 ### Setup Mattermost
 

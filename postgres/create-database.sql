@@ -15,6 +15,11 @@ CREATE USER gitbucket PASSWORD 'gitbucket';
 CREATE DATABASE gitbucket;
 GRANT ALL PRIVILEGES ON DATABASE gitbucket TO gitbucket;
 
+-- SonarQube
+CREATE USER sonarqube PASSWORD 'sonarqube';
+CREATE DATABASE sonarqube;
+GRANT ALL PRIVILEGES ON DATABASE sonarqube TO sonarqube;
+
 -- Mattermost
 -- https://github.com/mattermost/mattermost-docker
 CREATE USER mattermost PASSWORD 'mattermost';

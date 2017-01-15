@@ -80,6 +80,20 @@ services:
       - default
       - reverse-proxy-network
 
+  sonarqube:
+    image: sonarqube
+    links:
+      - db
+    environment:
+      - SONARQUBE_JDBC_USERNAME=sonar
+      - SONARQUBE_JDBC_PASSWORD=sonar
+      - SONARQUBE_JDBC_URL=jdbc:postgresql://db:5432/sonar
+    volumes:
+      - sonarqube-conf:/opt/sonarqube/conf
+      - sonarqube-data:/opt/sonarqube/data
+      - sonarqube-extensions:/opt/sonarqube/extensions
+      - sonarqube-plugins:/opt/sonarqube/lib/bundled-plugins
+
   mattermost:
     image: mattermost/mattermost-prod-app
     environment:
@@ -143,6 +157,14 @@ volumes:
   artifactory-data:
     driver: local
   artifactory-conf:
+    driver: local
+  sonarqube-conf:
+    driver: local
+  sonarqube-data:
+    driver: local
+  sonarqube-extensions:
+    driver: local
+  sonarqube-plugins:
     driver: local
   mattermost-data:
     driver: local
