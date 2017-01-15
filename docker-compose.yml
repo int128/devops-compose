@@ -120,21 +120,6 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      JIRA_DB_NAME: jira
-      JIRA_DB_USER: jira
-      JIRA_DB_PASSWORD: jira
-      CONFLUENCE_DB_NAME: confluence
-      CONFLUENCE_DB_USER: confluence
-      CONFLUENCE_DB_PASSWORD: confluence
-      GITBUCKET_DB_NAME: gitbucket
-      GITBUCKET_DB_USER: gitbucket
-      GITBUCKET_DB_PASSWORD: gitbucket
-      MATTERMOST_DB_NAME: mattermost
-      MATTERMOST_DB_USER: mattermost
-      MATTERMOST_DB_PASSWORD: mattermost
-      OWNCLOUD_DB_NAME: owncloud
-      OWNCLOUD_DB_USER: owncloud
-      OWNCLOUD_DB_PASSWORD: owncloud
     volumes:
       - db-data:/var/lib/postgresql/data
 
@@ -180,4 +165,3 @@ networks:
   reverse-proxy-network:
     external:
       name: ${REVERSE_PROXY_NETWORK}
-
