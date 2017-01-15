@@ -8,11 +8,19 @@ services:
 
   jira:
     image: cptactionhank/atlassian-jira-software
+    environment:
+      X_PROXY_NAME: jira.example.com
+      X_PROXY_PORT: 443
+      X_PROXY_SCHEME: https
     volumes:
       - jira-data:/var/atlassian/jira
 
   confluence:
     image: cptactionhank/atlassian-confluence
+    environment:
+      X_PROXY_NAME: confluence.example.com
+      X_PROXY_PORT: 443
+      X_PROXY_SCHEME: https
     volumes:
       - confluence-data:/var/atlassian/confluence
 
@@ -51,7 +59,7 @@ services:
   mattermost:
     image: mattermost/mattermost-prod-app
     environment:
-      MATTERMOST_ENABLE_SSL: ${REVERSE_PROXY_HTTPS}
+      MATTERMOST_ENABLE_SSL: "true"
       DB_HOST: db
       MM_DBNAME: mattermost
       MM_USERNAME: mattermost
