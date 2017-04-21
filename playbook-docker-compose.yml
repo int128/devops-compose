@@ -13,7 +13,7 @@
     service: name=docker state=running
   - name: Install Docker Compose
     get_url:
-      url: https://github.com/docker/compose/releases/download/1.8.1/docker-compose-{{ansible_system}}-{{ansible_machine}}
+      url: https://github.com/docker/compose/releases/download/1.12.0/docker-compose-{{ansible_system}}-{{ansible_machine}}
       dest: /usr/local/bin/docker-compose
       mode: 0755
   - name: Add user to docker group
