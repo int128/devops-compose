@@ -21,6 +21,7 @@ Run containers on Docker Compose.
 This may take a few minutes.
 
 ```sh
+echo 'REVERSE_PROXY_DOMAIN_NAME=example.com' >> .env
 docker-compose build
 docker-compose up -d
 ```
