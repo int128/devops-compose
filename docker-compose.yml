@@ -49,9 +49,9 @@ services:
   sonarqube:
     image: sonarqube
     environment:
-      - SONARQUBE_JDBC_USERNAME=sonar
-      - SONARQUBE_JDBC_PASSWORD=sonar
-      - SONARQUBE_JDBC_URL=jdbc:postgresql://db:5432/sonar
+      - SONARQUBE_JDBC_USERNAME=sonarqube
+      - SONARQUBE_JDBC_PASSWORD=sonarqube
+      - SONARQUBE_JDBC_URL=jdbc:postgresql://db:5432/sonarqube
     volumes:
       - sonarqube-conf:/opt/sonarqube/conf
       - sonarqube-data:/opt/sonarqube/data
