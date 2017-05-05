@@ -1,6 +1,6 @@
 # DevOps Compose [![CircleCI](https://circleci.com/gh/int128/devops-compose.svg?style=shield)](https://circleci.com/gh/int128/devops-compose)
 
-A compose of Docker containers:
+A compose of following Docker containers:
 
 * JIRA software
 * Confluence
@@ -13,25 +13,66 @@ A compose of Docker containers:
 * PostgreSQL
 * LDAP
 
-## How to Use
 
-This is designed to work behind SSL termination such as AWS ELB.
+## Provisioning
 
 Run containers on Docker Compose.
 This may take a few minutes.
 
 ```sh
-echo 'REVERSE_PROXY_DOMAIN_NAME=example.com' >> .env
+# Wildcard DNS
+echo 'REVERSE_PROXY_DOMAIN_NAME=192.168.1.2.xip.io' > .env
+
+# Custom domain
+echo 'REVERSE_PROXY_DOMAIN_NAME=example.com' > .env
+
 docker-compose build
 docker-compose up -d
 ```
 
-We can provision an EC2 instance with [the Ansible playbook](playbook-docker-compose.yml).
+
+### CoreOS
+
+Enough swap space and Docker Compose are required.
 
 ```sh
-ssh-add ~/.ssh/aws.pem
-ansible-playbook -i hosts playbook-docker-compose.yml
+#!/bin/bash -xe
+cat > /etc/systemd/system/swap.service <<EOF
+[Service]
+Type=oneshot
+ExecStartPre=-/usr/bin/rm -f /swapfile
+ExecStartPre=/usr/bin/touch /swapfile
+ExecStartPre=/usr/bin/fallocate -l 4G /swapfile
+ExecStartPre=/usr/bin/chmod 600 /swapfile
+ExecStartPre=/usr/sbin/mkswap /swapfile
+ExecStartPre=/usr/sbin/sysctl vm.swappiness=10
+ExecStart=/sbin/swapon /swapfile
+ExecStop=/sbin/swapoff /swapfile
+ExecStopPost=-/usr/bin/rm -f /swapfile
+RemainAfterExit=true
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl enable --now /etc/systemd/system/swap.service
+mkdir -p /opt/bin
+curl -L -o /opt/bin/docker-compose https://github.com/docker/compose/releases/download/1.12.0/docker-compose-Linux-x86_64
+chmod +x /opt/bin/docker-compose
 ```
+
+
+### Custom domain
+
+Create a wildcard record on the DNS service.
+
+```
+A *.example.com. 192.168.1.2.
+```
+
+
+## Setup
+
+Open http://devops.example.com (concatenate `devops` and domain name).
+
 
 ### Setup JIRA
 
