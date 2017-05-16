@@ -16,6 +16,7 @@ services:
       X_PROXY_SCHEME: http
     volumes:
       - jira-data:/var/atlassian/jira
+      - jira-logs:/opt/atlassian/jira/logs
 
   confluence:
     image: cptactionhank/atlassian-confluence
@@ -95,6 +96,8 @@ services:
 
 volumes:
   jira-data:
+    driver: local
+  jira-logs:
     driver: local
   confluence-data:
     driver: local
