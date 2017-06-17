@@ -60,7 +60,7 @@ services:
       - sonarqube-plugins:/opt/sonarqube/lib/bundled-plugins
 
   mattermost:
-    image: mattermost/mattermost-prod-app
+    image: mattermost/mattermost-prod-app:3.9.0
     environment:
       MATTERMOST_ENABLE_SSL: "true"
       DB_HOST: db
