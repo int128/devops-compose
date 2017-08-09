@@ -15,53 +15,9 @@ A compose of following Docker containers:
 * LDAP
 
 
-## Provisioning
+## How to provision
 
-Run containers on Docker Compose.
-This may take a few minutes.
-
-```sh
-# Wildcard DNS
-echo 'REVERSE_PROXY_DOMAIN_NAME=192.168.1.2.xip.io' > .env
-
-# Custom domain
-echo 'REVERSE_PROXY_DOMAIN_NAME=example.com' > .env
-
-docker-compose build
-docker-compose up -d
-```
-
-
-### CoreOS
-
-Enough swap space and Docker Compose are required.
-
-```sh
-#!/bin/bash -xe
-cat > /etc/systemd/system/swap.service <<EOF
-[Service]
-Type=oneshot
-ExecStartPre=-/usr/bin/rm -f /swapfile
-ExecStartPre=/usr/bin/touch /swapfile
-ExecStartPre=/usr/bin/fallocate -l 4G /swapfile
-ExecStartPre=/usr/bin/chmod 600 /swapfile
-ExecStartPre=/usr/sbin/mkswap /swapfile
-ExecStartPre=/usr/sbin/sysctl vm.swappiness=10
-ExecStart=/sbin/swapon /swapfile
-ExecStop=/sbin/swapoff /swapfile
-ExecStopPost=-/usr/bin/rm -f /swapfile
-RemainAfterExit=true
-[Install]
-WantedBy=multi-user.target
-EOF
-systemctl enable --now /etc/systemd/system/swap.service
-mkdir -p /opt/bin
-curl -L -o /opt/bin/docker-compose https://github.com/docker/compose/releases/download/1.12.0/docker-compose-Linux-x86_64
-chmod +x /opt/bin/docker-compose
-```
-
-
-### Custom domain
+### DNS
 
 Create a wildcard record on the DNS service.
 
@@ -69,11 +25,41 @@ Create a wildcard record on the DNS service.
 A *.example.com. 192.168.1.2.
 ```
 
+If you do not have a domain, instead use the wildcard DNS service such as xip.io.
 
-## Setup
+### Instance
+
+Docker Compose and enough swap space are required.
+
+```bash
+yum install -y docker
+mkdir -p /opt/bin
+curl -L -o /opt/bin/docker-compose https://github.com/docker/compose/releases/download/1.12.0/docker-compose-Linux-x86_64
+chmod +x /opt/bin/docker-compose
+fallocate -l 4G /swapfile
+chmod 600 /swapfile
+mkswap /swapfile
+swapon /swapfile
+echo '/swapfile swap swap defaults 0 0' >> /etc/fstab
+```
+
+Run containers. This may take a few minutes.
+
+```bash
+# Custom domain
+echo 'REVERSE_PROXY_DOMAIN_NAME=example.com' > .env
+
+# Wildcard DNS
+echo 'REVERSE_PROXY_DOMAIN_NAME=192.168.1.2.xip.io' > .env
+
+docker-compose build
+docker-compose up -d
+```
+
+
+## How to setup
 
 Open http://devops.example.com (concatenate `devops` and domain name).
-
 
 ### Setup Crowd
 
