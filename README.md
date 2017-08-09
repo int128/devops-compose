@@ -2,6 +2,7 @@
 
 A compose of following Docker containers:
 
+* Crowd
 * JIRA software
 * Confluence
 * GitBucket
@@ -74,6 +75,23 @@ A *.example.com. 192.168.1.2.
 Open http://devops.example.com (concatenate `devops` and domain name).
 
 
+### Setup Crowd
+
+Open Crowd and configure the database connection.
+
+- Database server: `db`
+- Type: PostgreSQL
+- Database name: `crowd`
+- User: `crowd`
+- Password: `crowd`
+
+Add the LDAP directory.
+
+- URL: `ldap://ldap:389/`
+- Base DN: `dc=example,dc=com`
+- Username: `cn=admin,dc=example,dc=com`
+- Password: `admin`
+
 ### Setup JIRA
 
 Open JIRA and configure the database connection.
@@ -84,14 +102,7 @@ Open JIRA and configure the database connection.
 - User: `jira`
 - Password: `jira`
 
-Configure LDAP authentication and create a user.
-
-- LDAP server: `ldap`
-- Admin DN: `cn=admin,dc=example,dc=com` with `admin`
-- Base DN: `dc=example,dc=com`
-- User attribute: `cn`
-- Name attribute: `displayName`
-- Mail attribute: `mail`
+Add the Crowd server.
 
 ### Setup Confluence
 
@@ -103,7 +114,7 @@ Open Confluence and configure the database connection.
 - User: `confluence`
 - Password: `confluence`
 
-Configure an application link to JIRA.
+Add the Crowd server.
 
 ### Setup Jenkins
 

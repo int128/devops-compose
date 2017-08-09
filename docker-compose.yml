@@ -8,6 +8,19 @@ services:
     environment:
       REVERSE_PROXY_DOMAIN_NAME: ${REVERSE_PROXY_DOMAIN_NAME}
 
+  crowd:
+    image: blacklabelops/crowd
+    volumes:
+      - crowd-data:/var/atlassian/crowd
+    environment:
+      CROWD_URL: http://localhost:8095/crowd
+      CROWD_PROXY_NAME: crowd.${REVERSE_PROXY_DOMAIN_NAME}
+      CROWD_PROXY_PORT: 443
+      CROWD_PROXY_SCHEME: https
+      CROWD_PROXY_SECURE: "true"
+      LOGIN_BASE_URL: https://crowd.${REVERSE_PROXY_DOMAIN_NAME}
+      CROWD_CONTEXT: crowd
+
   jira:
     image: cptactionhank/atlassian-jira-software
     environment:
@@ -99,6 +112,8 @@ services:
         hard: 65536
 
 volumes:
+  crowd-data:
+    driver: local
   jira-data:
     driver: local
   jira-logs:

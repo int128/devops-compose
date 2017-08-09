@@ -1,3 +1,8 @@
+-- Crowd
+CREATE USER crowd PASSWORD 'crowd';
+CREATE DATABASE crowd;
+GRANT ALL PRIVILEGES ON DATABASE crowd TO crowd;
+
 -- JIRA
 -- https://confluence.atlassian.com/adminjiraserver072/connecting-jira-applications-to-postgresql-828787559.html
 CREATE USER jira PASSWORD 'jira';
