@@ -11,7 +11,7 @@ A compose of following Docker containers:
 * SonarQube
 * Mattermost
 * ownCloud
-* LDAP
+* OpenLDAP
 
 
 ## How to provision
@@ -82,8 +82,8 @@ Open Crowd and configure the database connection.
 Add the LDAP directory.
 
 - URL: `ldap://ldap:389/`
-- Base DN: `dc=example,dc=com`
-- Username: `cn=admin,dc=example,dc=com`
+- Base DN: `dc=example,dc=org`
+- Username: `cn=admin,dc=example,dc=org`
 - Password: `admin`
 
 ### Setup JIRA
@@ -122,12 +122,12 @@ Open Jenkins and configure LDAP authentication.
 
 - Server: `ldap`
 - Root DN: (empty)
-- User search base: `dc=example,dc=com`
+- User search base: `dc=example,dc=org`
 - User search filter: `cn={0}`
-- Group search base: `dc=example,dc=com`
+- Group search base: `dc=example,dc=org`
 - Group search filter: `cn={0}`
 - Group membership: `memberOf` (default)
-- Manager DN: `cn=admin,dc=example,dc=com`
+- Manager DN: `cn=admin,dc=example,dc=org`
 - Manager Password: `admin`
 - Name attribute: `displayname` (default)
 - Mail attribute: `mail` (default)
@@ -137,8 +137,8 @@ Open Jenkins and configure LDAP authentication.
 Open GitBucket and configure LDAP authentication.
 
 - LDAP server: `ldap`
-- Admin DN: `cn=admin,dc=example,dc=com` with `admin`
-- Base DN: `dc=example,dc=com`
+- Admin DN: `cn=admin,dc=example,dc=org` with `admin`
+- Base DN: `dc=example,dc=org`
 - User attribute: `cn`
 - Name attribute: `displayname`
 - Mail attribute: `mail`
@@ -147,12 +147,12 @@ Open GitBucket and configure LDAP authentication.
 
 Open Artifactory and configure LDAP authentication.
 
-- LDAP server: `ldap://ldap/dc=example,dc=com`
+- LDAP server: `ldap://ldap/dc=example,dc=org`
 - User DN: `cn={0}`
 - Mail attribute: `mail`
 - Search filter: `(*)`
-- Search base: `dc=example,dc=com`
-- Manage DN: `cn=admin,dc=example,dc=com` with `admin`
+- Search base: `dc=example,dc=org`
+- Manage DN: `cn=admin,dc=example,dc=org` with `admin`
 
 ### Setup SonarQube
 
@@ -168,8 +168,8 @@ Configure a mail service such as AWS SES and use the email sign up.
 Open ownCloud and configure LDAP authentication.
 
 - LDAP server: `ldap:389`
-- Admin DN: `cn=admin,dc=example,dc=com` with `admin`
-- Base DN: `dc=example,dc=com`
+- Admin DN: `cn=admin,dc=example,dc=org` with `admin`
+- Base DN: `dc=example,dc=org`
 
 ### Register init script
 
