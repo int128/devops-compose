@@ -143,16 +143,24 @@ Open GitBucket and configure LDAP authentication.
 - Name attribute: `displayname`
 - Mail attribute: `mail`
 
-### Setup Artifactory
+### Setup Nexus
 
-Open Artifactory and configure LDAP authentication.
+Open Nexus and configure LDAP authentication.
 
-- LDAP server: `ldap://ldap/dc=example,dc=org`
-- User DN: `cn={0}`
-- Mail attribute: `mail`
-- Search filter: `(*)`
+- LDAP server: `ldap://ldap:389`
 - Search base: `dc=example,dc=org`
-- Manage DN: `cn=admin,dc=example,dc=org` with `admin`
+- Username: `cn=admin,dc=example,dc=org`
+- Password: `admin`
+- Configuration template: Generic Ldap Server
+- Object class: `inetOrgPerson` (default)
+- User ID attribute: `cn`
+- Name attribute: `displayname`
+- Mail attribute: `mail`
+- Group type: Static
+- Group object class: `posixGroup` (default)
+- Group ID attribute: `cn`
+- Group member attribute: `uniqueMember`
+- Group member format: `cn=${username},dc=example,dc=org`
 
 ### Setup SonarQube
 
