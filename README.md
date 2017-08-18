@@ -156,11 +156,8 @@ Open Nexus and configure LDAP authentication.
 - User ID attribute: `cn`
 - Name attribute: `displayname`
 - Mail attribute: `mail`
-- Group type: Static
-- Group object class: `posixGroup` (default)
-- Group ID attribute: `cn`
-- Group member attribute: `uniqueMember`
-- Group member format: `cn=${username},dc=example,dc=org`
+- Group type: Dynamic
+- Group member of attribute: `memberOf` (default)
 
 ### Setup SonarQube
 
