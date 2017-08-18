@@ -11,7 +11,6 @@ A compose of following Docker containers:
 * SonarQube
 * Mattermost
 * ownCloud
-* PostgreSQL
 * LDAP
 
 
@@ -26,6 +25,12 @@ A *.example.com. 192.168.1.2.
 ```
 
 If you do not have a domain, instead use the wildcard DNS service such as xip.io.
+
+### DBMS
+
+Create a PostgreSQL instance. It is recommended to use managed services such as Amazon RDS or Google Cloud SQL. If we are not on cloud, add a PostgreSQL container on the `docker-compose.yml`.
+
+Initialize databases and users with [`initialize-postgresql.sql`](/initialize-postgresql.sql).
 
 ### Instance
 
@@ -46,11 +51,12 @@ echo '/swapfile swap swap defaults 0 0' >> /etc/fstab
 Run containers. This may take a few minutes.
 
 ```bash
-# Custom domain
-echo 'REVERSE_PROXY_DOMAIN_NAME=example.com' > .env
+# Database host
+echo 'DATABASE_HOST=xxxxx.xxxxx.rds.amazonaws.com' >> .env
 
-# Wildcard DNS
-echo 'REVERSE_PROXY_DOMAIN_NAME=192.168.1.2.xip.io' > .env
+# Domain name
+echo 'REVERSE_PROXY_DOMAIN_NAME=example.com' >> .env           # using your DNS
+echo 'REVERSE_PROXY_DOMAIN_NAME=192.168.1.2.xip.io' >> .env    # using xip.io
 
 docker-compose build
 docker-compose up -d
@@ -65,7 +71,7 @@ Open http://devops.example.com (concatenate `devops` and domain name).
 
 Open Crowd and configure the database connection.
 
-- Database server: `db`
+- Database server: Hostname of the database instance
 - Type: PostgreSQL
 - Database name: `crowd`
 - User: `crowd`
@@ -82,7 +88,7 @@ Add the LDAP directory.
 
 Open JIRA and configure the database connection.
 
-- Database server: `db`
+- Database server: Hostname of the database instance
 - Type: PostgreSQL
 - Database name: `jira`
 - User: `jira`
@@ -94,7 +100,7 @@ Add the Crowd server.
 
 Open Confluence and configure the database connection.
 
-- Database server: `db`
+- Database server: Hostname of the database instance
 - Type: PostgreSQL
 - Database name: `confluence`
 - User: `confluence`
