@@ -121,12 +121,12 @@ docker exec devopscompose_jenkins_1 cat /var/jenkins_home/secrets/initialAdminPa
 Open Jenkins and configure LDAP authentication.
 
 - Server: `ldap`
-- Root DN: (empty)
-- User search base: `dc=example,dc=org`
+- Root DN: `dc=example,dc=org`
+- User search base: (empty)
 - User search filter: `cn={0}`
-- Group search base: `dc=example,dc=org`
+- Group search base: (empty)
 - Group search filter: `cn={0}`
-- Group membership: `memberOf` (default)
+- Group membership: Search for LDAP groups containing user, filter: `uniqueMember={0}`
 - Manager DN: `cn=admin,dc=example,dc=org`
 - Manager Password: `admin`
 - Name attribute: `displayname` (default)
