@@ -43,7 +43,7 @@ services:
   gitbucket:
     image: f99aq8ove/gitbucket
     environment:
-      GITBUCKET_DB_URL: jdbc:postgresql://db/gitbucket
+      GITBUCKET_DB_URL: jdbc:postgresql://${DATABASE_HOST}/gitbucket
       GITBUCKET_DB_USER: gitbucket
       GITBUCKET_DB_PASSWORD: gitbucket
     volumes:
@@ -65,7 +65,7 @@ services:
     environment:
       - SONARQUBE_JDBC_USERNAME=sonarqube
       - SONARQUBE_JDBC_PASSWORD=sonarqube
-      - SONARQUBE_JDBC_URL=jdbc:postgresql://db:5432/sonarqube
+      - SONARQUBE_JDBC_URL=jdbc:postgresql://${DATABASE_HOST}:5432/sonarqube
     volumes:
       - sonarqube-conf:/opt/sonarqube/conf
       - sonarqube-data:/opt/sonarqube/data
@@ -76,7 +76,7 @@ services:
     image: mattermost/mattermost-prod-app:3.9.0
     environment:
       MATTERMOST_ENABLE_SSL: "true"
-      DB_HOST: db
+      DB_HOST: ${DATABASE_HOST}
       MM_DBNAME: mattermost
       MM_USERNAME: mattermost
       MM_PASSWORD: mattermost
@@ -90,14 +90,6 @@ services:
       - owncloud-data:/var/www/html/data
       - owncloud-config:/var/www/html/config
       - owncloud-apps:/var/www/html/apps
-
-  db:
-    build: postgres
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    volumes:
-      - db-data:/var/lib/postgresql/data
 
   ldap:
     image: osixia/openldap
@@ -145,8 +137,6 @@ volumes:
   owncloud-config:
     driver: local
   owncloud-apps:
-    driver: local
-  db-data:
     driver: local
   ldap-data:
     driver: local
