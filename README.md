@@ -32,7 +32,7 @@ Create a PostgreSQL instance. It is recommended to use managed services such as 
 
 MySQL is also available and works well but [PostgreSQL is recommended for JIRA](https://confluence.atlassian.com/adminjiraserver074/supported-platforms-881683157.html).
 
-Initialize databases and users with [`initialize-postgresql.sql`](/initialize-postgresql.sql).
+Initialize databases and users with [`init-postgresql.sql`](/init-postgresql.sql).
 
 ### Instance
 
