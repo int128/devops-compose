@@ -7,7 +7,7 @@ A compose of following Docker containers:
 * Confluence
 * GitBucket
 * Jenkins
-* Artifactory
+* Nexus
 * SonarQube
 * Mattermost
 * ownCloud
