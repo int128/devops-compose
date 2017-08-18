@@ -16,6 +16,17 @@ A compose of following Docker containers:
 
 ## How to provision
 
+Recommended insfrastructure stack:
+
+Component | Note
+----------|-----
+Route53   | -
+ACM       | Provides SSL certificate. Strongly recommended for websocket apps.
+ALB       | Provides SSL termination.
+EC2       | -
+EBS       | Stores `/var/lib/docker`. Recommeded for easy migration.
+RDS       | Stores data. Recommeded for easy migration.
+
 ### DNS
 
 Create a wildcard record on the DNS service.
@@ -26,7 +37,7 @@ A *.example.com. 192.168.1.2.
 
 If you do not have a domain, instead use the wildcard DNS service such as xip.io.
 
-### DBMS
+### Database
 
 Create a PostgreSQL instance. It is recommended to use managed services such as Amazon RDS or Google Cloud SQL for maintenancebility reason. If we are not on cloud, we can add [a PostgreSQL container](https://hub.docker.com/_/postgres/) to the `docker-compose.yml`.
 
