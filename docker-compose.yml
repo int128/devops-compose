@@ -93,8 +93,6 @@ services:
 
   ldap:
     image: osixia/openldap
-    environment:
-      LDAP_DOMAIN: ${REVERSE_PROXY_DOMAIN_NAME}
     volumes:
       - ldap-data:/var/lib/ldap
       - ldap-config:/etc/ldap/slapd.d
