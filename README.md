@@ -28,7 +28,7 @@ If you do not have a domain, instead use the wildcard DNS service such as xip.io
 
 ### DBMS
 
-Create a PostgreSQL instance. It is recommended to use managed services such as Amazon RDS or Google Cloud SQL. If we are not on cloud, add [a PostgreSQL container](https://hub.docker.com/_/postgres/) to the `docker-compose.yml`.
+Create a PostgreSQL instance. It is recommended to use managed services such as Amazon RDS or Google Cloud SQL for maintenancebility reason. If we are not on cloud, we can add [a PostgreSQL container](https://hub.docker.com/_/postgres/) to the `docker-compose.yml`.
 
 MySQL is also available and works well but [PostgreSQL is recommended for JIRA](https://confluence.atlassian.com/adminjiraserver074/supported-platforms-881683157.html).
 
