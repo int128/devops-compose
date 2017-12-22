@@ -14,71 +14,99 @@ A compose of following Docker containers:
 * OpenLDAP
 
 
-## How to provision
+## Getting Started
 
-Recommended insfrastructure stack:
+Create the following stack.
 
 Component | Note
 ----------|-----
-Route53   | -
-ACM       | Provides SSL certificate. Strongly recommended for websocket apps.
-ALB       | Provides SSL termination.
+RDS       | Stores databases. Recommeded for easy backup and migration.
+EBS#1     | Stores `/var/lib/docker`.
+EBS#2     | Stores persistent volumes. Recommeded for easy backup and migration.
 EC2       | -
-EBS       | Stores `/var/lib/docker`. Recommeded for easy migration.
-RDS       | Stores data. Recommeded for easy migration.
+ACM       | Provides a SSL certificate.
+ALB       | Provides a SSL termination.
+Route53   | -
 
-### DNS
+### RDS database
 
-Create a wildcard record on the DNS service.
+Create a PostgreSQL instance.
+It is recommended to use managed services such as Amazon RDS or Google Cloud SQL for maintenancebility reason.
+MySQL is available and works as well but [PostgreSQL is recommended for JIRA](https://confluence.atlassian.com/adminjiraserver074/supported-platforms-881683157.html).
 
-```
-A *.example.com. 192.168.1.2.
-```
+Initialize databases and users by executing [`init-postgresql.sql`](/init-postgresql.sql).
 
-If you do not have a domain, instead use the wildcard DNS service such as xip.io.
+### EC2 Instance
 
-### Database
+Create following EC2 instance and EBS volumes:
 
-Create a PostgreSQL instance. It is recommended to use managed services such as Amazon RDS or Google Cloud SQL for maintenancebility reason. If we are not on cloud, we can add [a PostgreSQL container](https://hub.docker.com/_/postgres/) to the `docker-compose.yml`.
+- EC2 instance
+- EBS volume attached to the instance on `/var/lib/docker`
+- EBS volume attached to the instance on `/persistent_volumes`
 
-MySQL is also available and works well but [PostgreSQL is recommended for JIRA](https://confluence.atlassian.com/adminjiraserver074/supported-platforms-881683157.html).
-
-Initialize databases and users with [`init-postgresql.sql`](/init-postgresql.sql).
-
-### Instance
-
-Docker Compose and enough swap space are required.
+Connect to the instance and do followings:
 
 ```bash
-yum install -y docker
-mkdir -p /opt/bin
-curl -L -o /opt/bin/docker-compose https://github.com/docker/compose/releases/download/1.12.0/docker-compose-Linux-x86_64
-chmod +x /opt/bin/docker-compose
-fallocate -l 4G /swapfile
-chmod 600 /swapfile
-mkswap /swapfile
-swapon /swapfile
-echo '/swapfile swap swap defaults 0 0' >> /etc/fstab
+# Configure fstab
+echo '/dev/xvdb /var/lib/docker ext4 defaults,nofail 0 2' | sudo tee -a /etc/fstab
+echo '/dev/xvdc /persistent_volumes ext4 defaults,nofail 0 2' | sudo tee -a /etc/fstab
+
+# Create swap space
+sudo fallocate -l 4G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+echo '/swapfile swap swap defaults 0 0' | sudo tee -a /etc/fstab
+
+# Install Docker Compose
+sudo yum install -y docker
+sudo curl -L -o /usr/local/bin/docker-compose https://github.com/docker/compose/releases/download/1.12.0/docker-compose-Linux-x86_64
+sudo chmod +x /usr/local/bin/docker-compose
+
+# Make sure Docker service is running
+sudo docker version
+sudo docker-compose version
 ```
 
 Run containers. This may take a few minutes.
 
 ```bash
-# Database host
-echo 'DATABASE_HOST=xxxxx.xxxxx.rds.amazonaws.com' >> .env
+cd /persistent_volumes
+git clone https://github.com/int128/devops-compose.git
+cd /persistent_volumes/devops-compose
 
-# Domain name
-echo 'REVERSE_PROXY_DOMAIN_NAME=example.com' >> .env           # using your DNS
-echo 'REVERSE_PROXY_DOMAIN_NAME=192.168.1.2.xip.io' >> .env    # using xip.io
+# Environment specific values
+echo 'DATABASE_HOST=xxxxx.xxxxx.rds.amazonaws.com' >> .env
+echo 'REVERSE_PROXY_DOMAIN_NAME=example.com' >> .env
+echo 'PERSISTENT_VOLUMES_ROOT=/persistent_volumes' >> .env
 
 docker-compose build
 docker-compose up -d
 ```
 
+### ALB, Route53 and ACM
 
-## How to setup
+Request a certificate for a wildcard domain on ACM.
 
-Open http://devops.example.com (concatenate `devops` and domain name).
+Create an ALB and target group for the instance.
+
+Create a wildcard record on the hosted zone.
+
+```
+A *.example.com. <ELB endpoint>.
+```
+
+### Configure auto launch
+
+```sh
+sudo ln -s /persistent_volumes/devops-compose/init-lsb.sh /etc/init.d/devops-compose
+sudo chkconfig --add devops-compose
+```
+
+
+## Setup DevOps tools
+
+Open https://devops.example.com (concatenate `devops` and the domain).
 
 ### Setup Crowd
 
@@ -187,19 +215,6 @@ Open ownCloud and configure LDAP authentication.
 - Admin DN: `cn=admin,dc=example,dc=org` with `admin`
 - Base DN: `dc=example,dc=org`
 
-### Register init script
-
-We provide the init script for LSB.
-Register as follows:
-
-```sh
-sudo ln -s /opt/devops-compose/init-lsb.sh /etc/init.d/devops-compose
-sudo chkconfig --add devops-compose
-```
-
-## Backup and Restore
-
-It may be best to backup and restore volumes under `/var/lib/docker/volumes`.
 
 ## Contribution
 

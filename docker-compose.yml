@@ -11,7 +11,7 @@ services:
   crowd:
     image: blacklabelops/crowd
     volumes:
-      - crowd-data:/var/atlassian/crowd
+      - ${PERSISTENT_VOLUMES_ROOT}/crowd-data:/var/atlassian/crowd
     environment:
       CROWD_URL: http://localhost:8095/crowd
       CROWD_PROXY_NAME: crowd.${REVERSE_PROXY_DOMAIN_NAME}
@@ -28,8 +28,8 @@ services:
       X_PROXY_PORT: 80
       X_PROXY_SCHEME: http
     volumes:
-      - jira-data:/var/atlassian/jira
-      - jira-logs:/opt/atlassian/jira/logs
+      - ${PERSISTENT_VOLUMES_ROOT}/jira-data:/var/atlassian/jira
+      - ${PERSISTENT_VOLUMES_ROOT}/jira-logs:/opt/atlassian/jira/logs
 
   confluence:
     image: cptactionhank/atlassian-confluence
@@ -38,7 +38,7 @@ services:
       X_PROXY_PORT: 80
       X_PROXY_SCHEME: http
     volumes:
-      - confluence-data:/var/atlassian/confluence
+      - ${PERSISTENT_VOLUMES_ROOT}/confluence-data:/var/atlassian/confluence
 
   gitbucket:
     image: f99aq8ove/gitbucket
@@ -47,17 +47,17 @@ services:
       GITBUCKET_DB_USER: gitbucket
       GITBUCKET_DB_PASSWORD: gitbucket
     volumes:
-      - gitbucket-data:/gitbucket
+      - ${PERSISTENT_VOLUMES_ROOT}/gitbucket-data:/gitbucket
 
   jenkins:
     image: jenkins
     volumes:
-      - jenkins-data:/var/jenkins_home
+      - ${PERSISTENT_VOLUMES_ROOT}/jenkins-data:/var/jenkins_home
 
   nexus:
     image: sonatype/nexus3
     volumes:
-      - nexus-data:/nexus-data
+      - ${PERSISTENT_VOLUMES_ROOT}/nexus-data:/nexus-data
 
   sonarqube:
     image: sonarqube
@@ -66,10 +66,10 @@ services:
       - SONARQUBE_JDBC_PASSWORD=sonarqube
       - SONARQUBE_JDBC_URL=jdbc:postgresql://${DATABASE_HOST}:5432/sonarqube
     volumes:
-      - sonarqube-conf:/opt/sonarqube/conf
-      - sonarqube-data:/opt/sonarqube/data
-      - sonarqube-extensions:/opt/sonarqube/extensions
-      - sonarqube-plugins:/opt/sonarqube/lib/bundled-plugins
+      - ${PERSISTENT_VOLUMES_ROOT}/sonarqube-conf:/opt/sonarqube/conf
+      - ${PERSISTENT_VOLUMES_ROOT}/sonarqube-data:/opt/sonarqube/data
+      - ${PERSISTENT_VOLUMES_ROOT}/sonarqube-extensions:/opt/sonarqube/extensions
+      - ${PERSISTENT_VOLUMES_ROOT}/sonarqube-plugins:/opt/sonarqube/lib/bundled-plugins
 
   mattermost:
     image: mattermost/mattermost-prod-app
@@ -80,60 +80,22 @@ services:
       MM_USERNAME: mattermost
       MM_PASSWORD: mattermost
     volumes:
-      - mattermost-data:/mattermost/data
-      - mattermost-config:/mattermost/config
+      - ${PERSISTENT_VOLUMES_ROOT}/mattermost-data:/mattermost/data
+      - ${PERSISTENT_VOLUMES_ROOT}/mattermost-config:/mattermost/config
 
   owncloud:
     image: owncloud
     volumes:
-      - owncloud-data:/var/www/html/data
-      - owncloud-config:/var/www/html/config
-      - owncloud-apps:/var/www/html/apps
+      - ${PERSISTENT_VOLUMES_ROOT}/owncloud-data:/var/www/html/data
+      - ${PERSISTENT_VOLUMES_ROOT}/owncloud-config:/var/www/html/config
+      - ${PERSISTENT_VOLUMES_ROOT}/owncloud-apps:/var/www/html/apps
 
   ldap:
     image: osixia/openldap
     volumes:
-      - ldap-data:/var/lib/ldap
-      - ldap-config:/etc/ldap/slapd.d
+      - ${PERSISTENT_VOLUMES_ROOT}/ldap-data:/var/lib/ldap
+      - ${PERSISTENT_VOLUMES_ROOT}/ldap-config:/etc/ldap/slapd.d
     ulimits:
       nofile:
         soft: 65536
         hard: 65536
-
-volumes:
-  crowd-data:
-    driver: local
-  jira-data:
-    driver: local
-  jira-logs:
-    driver: local
-  confluence-data:
-    driver: local
-  gitbucket-data:
-    driver: local
-  jenkins-data:
-    driver: local
-  nexus-data:
-    driver: local
-  sonarqube-conf:
-    driver: local
-  sonarqube-data:
-    driver: local
-  sonarqube-extensions:
-    driver: local
-  sonarqube-plugins:
-    driver: local
-  mattermost-data:
-    driver: local
-  mattermost-config:
-    driver: local
-  owncloud-data:
-    driver: local
-  owncloud-config:
-    driver: local
-  owncloud-apps:
-    driver: local
-  ldap-data:
-    driver: local
-  ldap-config:
-    driver: local

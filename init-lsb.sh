@@ -8,7 +8,7 @@
 # Default-Stop:   0 1 6
 ### END INIT INFO
 
-PROJECT_DIR=/opt/devops-compose
+PROJECT_DIR=/persistent_volumes/devops-compose
 OPTS=""
 PATH="/usr/local/bin:$PATH"
 
