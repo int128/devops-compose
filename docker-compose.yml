@@ -25,8 +25,8 @@ services:
     image: cptactionhank/atlassian-jira-software
     environment:
       X_PROXY_NAME: jira.${REVERSE_PROXY_DOMAIN_NAME}
-      X_PROXY_PORT: 80
-      X_PROXY_SCHEME: http
+      X_PROXY_PORT: 443
+      X_PROXY_SCHEME: https
     volumes:
       - ${PERSISTENT_VOLUMES_ROOT}/jira-data:/var/atlassian/jira
       - ${PERSISTENT_VOLUMES_ROOT}/jira-logs:/opt/atlassian/jira/logs
@@ -35,8 +35,8 @@ services:
     image: cptactionhank/atlassian-confluence
     environment:
       X_PROXY_NAME: confluence.${REVERSE_PROXY_DOMAIN_NAME}
-      X_PROXY_PORT: 80
-      X_PROXY_SCHEME: http
+      X_PROXY_PORT: 443
+      X_PROXY_SCHEME: https
     volumes:
       - ${PERSISTENT_VOLUMES_ROOT}/confluence-data:/var/atlassian/confluence
 
