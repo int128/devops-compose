@@ -1,5 +1,4 @@
 version: "2"
-
 services:
   nginx:
     build: nginx
@@ -7,7 +6,19 @@ services:
       - "80:80"
     environment:
       REVERSE_PROXY_DOMAIN_NAME: ${REVERSE_PROXY_DOMAIN_NAME}
-
+  db:
+    image: postgres
+    restart: always
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER:  postgres
+      POSTGRES_PASSWORD: toread
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
   crowd:
     image: blacklabelops/crowd
     volumes:
@@ -20,6 +31,8 @@ services:
       CROWD_PROXY_SECURE: "true"
       LOGIN_BASE_URL: https://crowd.${REVERSE_PROXY_DOMAIN_NAME}
       CROWD_CONTEXT: crowd
+    depends_on:
+      - db
 
   jira:
     image: cptactionhank/atlassian-jira-software
@@ -30,7 +43,8 @@ services:
     volumes:
       - jira-data:/var/atlassian/jira
       - jira-logs:/opt/atlassian/jira/logs
-
+    depends_on:
+      - db
   confluence:
     image: cptactionhank/atlassian-confluence
     environment:
@@ -39,7 +53,8 @@ services:
       X_PROXY_SCHEME: http
     volumes:
       - confluence-data:/var/atlassian/confluence
-
+    depends_on:
+      - db
   gitbucket:
     image: f99aq8ove/gitbucket
     environment:
@@ -48,7 +63,8 @@ services:
       GITBUCKET_DB_PASSWORD: gitbucket
     volumes:
       - gitbucket-data:/gitbucket
-
+    depends_on:
+      - db
   jenkins:
     image: jenkins
     volumes:
@@ -101,6 +117,8 @@ services:
         hard: 65536
 
 volumes:
+  postgres-data:
+    driver: local
   crowd-data:
     driver: local
   jira-data:
